@@ -1,13 +1,11 @@
 package com.xcoder.iotserver;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
+import com.xcoder.iotserver.broadcast.BluetoothBr;
+import com.xcoder.iotserver.service.IotService;
+import com.xcoder.iotserver.service.ServiceConn;
 
 /**
  * Main Activity
@@ -17,39 +15,30 @@ import android.support.v7.app.AppCompatActivity;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private ServiceConnection serviceConnection;
+    private final ServiceConn serviceConn = new ServiceConn(IotService.class, Context.BIND_AUTO_CREATE);
+
+    private final BluetoothBr bluetoothBr = new BluetoothBr();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String serviceIntentName = "com.xcoder.iotserver.service.IotService";
-        Context context = this.getApplicationContext();
+        this.serviceConn.bindService(this);
+        this.bluetoothBr.registerReceiver(this);
+    }
 
-        this.serviceConnection = this.getServiceConnection();
-        Intent intent = new Intent().setClassName(context, serviceIntentName);
-        this.bindService(intent, this.serviceConnection, Context.BIND_AUTO_CREATE);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        this.serviceConn.bindService(this);
+        this.bluetoothBr.registerReceiver(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (null != this.serviceConnection) {
-            this.unbindService(this.serviceConnection);
-        }
-    }
-
-    private ServiceConnection getServiceConnection() {
-        final ServiceConnection serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-            }
-        };
-        return serviceConnection;
+        this.unbindService(this.serviceConn);
+        this.unregisterReceiver(this.bluetoothBr);
     }
 }
