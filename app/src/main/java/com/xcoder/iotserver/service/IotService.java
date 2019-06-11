@@ -25,18 +25,18 @@ public class IotService extends Service {
 
     private IBinder iBinder = new Binder();
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return this.iBinder;
-    }
-
     @Override
     public void onCreate() {
         super.onCreate();
         this.iSwitcher = new Switcher(this);
         this.iotServer = new IotServer((IHandler) this.iSwitcher);
         this.iotServer.start();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return this.iBinder;
     }
 
     @Override

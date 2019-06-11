@@ -39,16 +39,6 @@ public class ServiceConn implements ServiceConnection {
         this.clazz = clazz;
     }
 
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-
-    }
-
     /**
      * 绑定ServiceConnection
      *
@@ -58,5 +48,15 @@ public class ServiceConn implements ServiceConnection {
         final Intent intent = new Intent();
         intent.setClassName(context, this.className);
         context.bindService(intent, this, this.flags);
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
     }
 }

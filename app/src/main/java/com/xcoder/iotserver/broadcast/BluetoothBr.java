@@ -16,7 +16,7 @@ import com.xcoder.iotserver.utensil.X;
  */
 public class BluetoothBr extends BroadcastReceiver {
 
-    private static final String[] BLUETOOTH_ACTION_INTENT_FILTER = new String[]{BluetoothDevice.ACTION_FOUND, BluetoothAdapter.ACTION_DISCOVERY_FINISHED};
+    private static final String[] BLUETOOTH_ACTION_INTENT_FILTER = new String[]{BluetoothDevice.ACTION_ACL_CONNECTED, BluetoothDevice.ACTION_FOUND, BluetoothAdapter.ACTION_DISCOVERY_FINISHED};
 
     /**
      * 注册蓝牙事件广播
@@ -34,7 +34,7 @@ public class BluetoothBr extends BroadcastReceiver {
         boolean extraMatch = X.extraMatch(intent, BluetoothAdapter.EXTRA_STATE
                 , BluetoothAdapter.ERROR, BluetoothAdapter.STATE_ON);
 
-//        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (actionMatch) {
             BluetoothDevice bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
