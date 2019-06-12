@@ -3,7 +3,6 @@ package com.xcoder.iotserver.switcher;
 import android.app.Service;
 import android.media.MediaPlayer;
 import android.util.Log;
-
 import com.xcoder.iotserver.server.IHandler;
 import com.xcoder.iotserver.utensil.X;
 
@@ -16,7 +15,7 @@ import java.io.IOException;
  * @author Chuck Lee
  * @date 2019-06-03
  */
-public class Switcher implements ISwitcher, IHandler {
+public class Switcher implements ISwitcher, IHandler<String, String> {
     /**
      * Hold service instance
      */
@@ -63,8 +62,7 @@ public class Switcher implements ISwitcher, IHandler {
     }
 
     @Override
-    public Object handle(Object o) {
-        String s = (String) o;
+    public String handle(String s) {
         String p = s.substring(s.indexOf("GET") + 3, s.indexOf("HTTP")).trim();
         p = p.substring(1);
         this.play(p);
