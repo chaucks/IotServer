@@ -1,11 +1,12 @@
 package com.xcoder.iotserver.server;
 
 import android.util.Log;
+import com.xcoder.iotserver.utensil.Io;
 import com.xcoder.iotserver.utensil.X;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,8 +20,6 @@ import java.net.Socket;
 public class IotServer extends Thread {
 
     public static final String CHARSET_IN = "utf-8";
-
-    public static final int BUFFER_SIZE = 1024;
 
     public static final String CHARSET_OUT = "utf-8";
 
@@ -51,20 +50,14 @@ public class IotServer extends Thread {
         }
         for (; this.running; ) {
             Socket s = null;
-            BufferedReader br = null;
+            InputStream is = null;
+            ByteArrayOutputStream bos = null;
             OutputStream os = null;
             try {
                 s = ss.accept();
-                br = new BufferedReader(new InputStreamReader(s.getInputStream(), CHARSET_IN));
-                StringBuilder buffer = new StringBuilder(BUFFER_SIZE);
-                for (String line = br.readLine(); null != line; line = br.readLine()) {
-                    if ("".equals(line)) {
-                        Log.d("line", line);
-                        break;
-                    }
-                    buffer.append(line);
-                }
-                String request = buffer.toString();
+                is = s.getInputStream();
+
+                String request = new String(Io.read(is), CHARSET_IN);
                 Log.d("Request", request);
 
                 Object object = this.iHandler.handle(request);
@@ -85,27 +78,7 @@ public class IotServer extends Thread {
             } catch (Throwable t) {
                 Log.e("", "", t);
             } finally {
-                if (null != os) {
-                    try {
-                        os.close();
-                    } catch (IOException e) {
-                        Log.e("", "", e);
-                    }
-                }
-                if (null != br) {
-                    try {
-                        br.close();
-                    } catch (IOException e) {
-                        Log.e("", "", e);
-                    }
-                }
-                if (null != s) {
-                    try {
-                        s.close();
-                    } catch (IOException e) {
-                        Log.e("", "", e);
-                    }
-                }
+                Io.closeableClose(os, bos, is, s);
             }
         }
 
