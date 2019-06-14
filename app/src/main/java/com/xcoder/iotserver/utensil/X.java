@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Environment;
 
 import java.io.File;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class X {
 
@@ -16,6 +18,12 @@ public class X {
     public static final String EXTERNAL_STORAGE_DIRECTORY_PATH = EXTERNAL_STORAGE_DIRECTORY_FILE.getPath();
 
     public static final String EXTERNAL_STORAGE_DIRECTORY_ABSOLUTE_PATH = EXTERNAL_STORAGE_DIRECTORY_FILE.getAbsolutePath();
+
+    public static final String NR = "\n\r";
+
+    public static final String RN = "\r\n";
+
+    public static final ExecutorService THREAD_POOL = Executors.newSingleThreadExecutor();
 
     /**
      * Get android external storage path
@@ -99,5 +107,18 @@ public class X {
             return defaultExtra;
         }
         return extra;
+    }
+
+    /**
+     * Split string by \n\r or \r\n
+     *
+     * @param string string
+     * @return array
+     */
+    public static String[] splitNrOrRn(String string) {
+        if (string.contains(NR)) {
+            return string.split(NR);
+        }
+        return string.split(RN);
     }
 }

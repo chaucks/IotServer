@@ -12,8 +12,9 @@ public interface ISwitcher {
      * & Rf 433mzh send close
      *
      * @param cmd which command
+     * @throws Throwable
      */
-    void play(String cmd);
+    void play(String cmd) throws Throwable;
 
     /**
      * 释放资源

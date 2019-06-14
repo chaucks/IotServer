@@ -1,13 +1,10 @@
 package com.xcoder.iotserver.switcher;
 
-import android.app.Service;
 import android.media.MediaPlayer;
 import android.util.Log;
-import com.xcoder.iotserver.server.IHandler;
 import com.xcoder.iotserver.utensil.X;
 
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Switch of iot control
@@ -15,35 +12,24 @@ import java.io.IOException;
  * @author Chuck Lee
  * @date 2019-06-03
  */
-public class Switcher implements ISwitcher, IHandler<String, String> {
-    /**
-     * Hold service instance
-     */
-    private Service service;
+public class Switcher implements ISwitcher {
 
     private final MediaPlayer mediaPlayer;
 
-    public Switcher(Service service) {
-        X.objectNotNull(service);
-        this.service = service;
+    public Switcher() {
         this.mediaPlayer = new MediaPlayer();
     }
 
     @Override
-    public void play(final String path) {
-        X.objectsNotNull(this.service, this.mediaPlayer, path);
+    public void play(final String path) throws Throwable {
+        X.objectsNotNull(this.mediaPlayer, path);
         synchronized (this.mediaPlayer) {
-            try {
-                String filePath = X.appendExternalStorageDirectory(File.separator, path, ".wav");
-                Log.v("File path:", filePath);
-                this.mediaPlayer.reset();
-                this.mediaPlayer.setDataSource(filePath);
-                this.mediaPlayer.prepare();
-                this.mediaPlayer.start();
-            } catch (IOException e) {
-                Log.e("Switcher.play", e.getMessage(), e);
-                throw new RuntimeException(e.getMessage());
-            }
+            String filePath = X.appendExternalStorageDirectory(File.separator, path, ".wav");
+            Log.v("File path:", filePath);
+            this.mediaPlayer.reset();
+            this.mediaPlayer.setDataSource(filePath);
+            this.mediaPlayer.prepare();
+            this.mediaPlayer.start();
         }
     }
 
@@ -59,13 +45,5 @@ public class Switcher implements ISwitcher, IHandler<String, String> {
         } catch (Throwable t) {
             Log.e("Switcher.release", t.getMessage(), t);
         }
-    }
-
-    @Override
-    public String handle(String s) {
-        String p = s.substring(s.indexOf("GET") + 3, s.indexOf("HTTP")).trim();
-        p = p.substring(1);
-        this.play(p);
-        return "Success";
     }
 }
