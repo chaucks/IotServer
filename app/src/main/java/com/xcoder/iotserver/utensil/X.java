@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.os.Environment;
 
 import java.io.File;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class X {
 
@@ -22,8 +20,6 @@ public class X {
     public static final String NR = "\n\r";
 
     public static final String RN = "\r\n";
-
-    public static final ExecutorService THREAD_POOL = Executors.newSingleThreadExecutor();
 
     /**
      * Get android external storage path
@@ -122,21 +118,4 @@ public class X {
         return string.split(RN);
     }
 
-    /**
-     * Thread interrupt
-     *
-     * @param threads threads
-     */
-    public static void interrupt(Thread... threads) {
-        for (Thread thread : threads) {
-            if (null == thread) {
-                continue;
-            }
-            try {
-                thread.interrupt();
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-        }
-    }
 }

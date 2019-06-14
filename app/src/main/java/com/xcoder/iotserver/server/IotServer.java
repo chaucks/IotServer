@@ -1,9 +1,10 @@
 package com.xcoder.iotserver.server;
 
 import android.util.Log;
+import com.xcoder.iotserver.handler.ISocketHandler;
 import com.xcoder.iotserver.handler.SocketHandler;
 import com.xcoder.iotserver.utensil.Io;
-import com.xcoder.iotserver.utensil.X;
+import com.xcoder.iotserver.utensil.T;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -36,7 +37,7 @@ public class IotServer extends Thread {
             return;
         }
 
-        SocketHandler socketHandler = new SocketHandler();
+        ISocketHandler socketHandler = new SocketHandler();
         for (Socket socket; this.running; ) {
             try {
                 socket = this.serverSocket.accept();
@@ -53,7 +54,7 @@ public class IotServer extends Thread {
     public void interrupt() {
         this.running = false;
         Io.closeableClose(this.serverSocket);
-        X.interrupt(this);
-        X.THREAD_POOL.shutdown();
+        T.interrupt(this);
+        T.shutdown();
     }
 }
