@@ -121,4 +121,22 @@ public class X {
         }
         return string.split(RN);
     }
+
+    /**
+     * Thread interrupt
+     *
+     * @param threads threads
+     */
+    public static void interrupt(Thread... threads) {
+        for (Thread thread : threads) {
+            if (null == thread) {
+                continue;
+            }
+            try {
+                thread.interrupt();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+    }
 }
