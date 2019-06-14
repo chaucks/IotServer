@@ -32,7 +32,8 @@ public class IoHandler implements IIoHandler<InputStream, OutputStream> {
             Log.d("Request", request);
 
             Map<String, String> requestMap = getRequestMap(request);
-
+            
+            os.write("OK".getBytes(CHARSET_OUT));
         } catch (Throwable t) {
             Log.e("IoHandler", "handle", t);
             try {
