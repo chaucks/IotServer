@@ -36,12 +36,10 @@ public class Switcher implements ISwitcher {
     @Override
     public void release() {
         try {
-            if (null != this.mediaPlayer) {
-                if (this.mediaPlayer.isPlaying()) {
-                    this.mediaPlayer.stop();
-                }
-                this.mediaPlayer.release();
+            if (this.mediaPlayer.isPlaying()) {
+                this.mediaPlayer.stop();
             }
+            this.mediaPlayer.release();
         } catch (Throwable t) {
             Log.e("Switcher.release", t.getMessage(), t);
         }
