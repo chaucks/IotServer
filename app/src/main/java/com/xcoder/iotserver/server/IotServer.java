@@ -54,5 +54,6 @@ public class IotServer extends Thread {
         this.running = false;
         Io.closeableClose(this.serverSocket);
         X.interrupt(this);
+        X.THREAD_POOL.shutdown();
     }
 }
