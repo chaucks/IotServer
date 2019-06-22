@@ -1,6 +1,13 @@
 package com.xcoder.iotserver.utensil;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.Flushable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  * IO
@@ -10,9 +17,9 @@ import java.io.*;
  */
 public class Io {
 
-    private static final long DEFAULT_EXPIRE = 10000L;
+    private static final long DEFAULT_EXPIRE = 20000L;
 
-    private static final long DEFAULT_TIMEOUT = 50L;
+    private static final long DEFAULT_TIMEOUT = 150L;
 
     private static final int DEFAULT_LENGTH = 102400;
 
@@ -159,6 +166,48 @@ public class Io {
             }
             try {
                 closeable.close();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Socket array close
+     *
+     * @param sockets sockets
+     */
+    public static void socketClose(Socket... sockets) {
+        for (Socket socket : sockets) {
+            if (null == socket) {
+                continue;
+            }
+            if (socket.isClosed()) {
+                continue;
+            }
+            try {
+                socket.close();
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * ServerSocket array close
+     *
+     * @param serverSockets serverSockets
+     */
+    public static void serverSocketClose(ServerSocket... serverSockets) {
+        for (ServerSocket serverSocket : serverSockets) {
+            if (null == serverSocket) {
+                continue;
+            }
+            if (serverSocket.isClosed()) {
+                continue;
+            }
+            try {
+                serverSocket.close();
             } catch (Throwable t) {
                 t.printStackTrace();
             }

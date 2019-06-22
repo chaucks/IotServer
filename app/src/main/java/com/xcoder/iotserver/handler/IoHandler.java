@@ -1,6 +1,7 @@
 package com.xcoder.iotserver.handler;
 
 import android.util.Log;
+
 import com.xcoder.iotserver.utensil.Io;
 import com.xcoder.iotserver.utensil.X;
 
@@ -25,6 +26,10 @@ public class IoHandler implements IIoHandler<InputStream, OutputStream> {
             .concat("Content-Type: text/html; charset=utf-8\n")
             .concat("\n").concat("<h1>Error</h1>");
 
+    public static final String OK_200_HTML = "HTTP/1.1 200 OK\n"
+            .concat("Content-Type: text/html; charset=utf-8\n")
+            .concat("\n").concat("<h1>Success</h1>");
+
     @Override
     public void handle(InputStream is, OutputStream os) {
         try {
@@ -32,8 +37,8 @@ public class IoHandler implements IIoHandler<InputStream, OutputStream> {
             Log.d("Request", request);
 
             Map<String, String> requestMap = getRequestMap(request);
-            
-            os.write("OK".getBytes(CHARSET_OUT));
+
+            os.write(OK_200_HTML.getBytes(CHARSET_OUT));
         } catch (Throwable t) {
             Log.e("IoHandler", "handle", t);
             try {
@@ -56,16 +61,24 @@ public class IoHandler implements IIoHandler<InputStream, OutputStream> {
     public static Map<String, String> getRequestMap(String request) {
         Map<String, String> requestMap = new HashMap<>(16);
         String[] lines = X.splitNrOrRn(request);
+        String line0 = lines[0];
+
+        // Parse request uri
+        String[] strings = line0.split(" ");
+        requestMap.put("Method", strings[0]);
+        requestMap.put("Uri", strings[1]);
+        requestMap.put("Version", strings[2]);
+
         for (String line : lines) {
-            if (!line.contains(":")) {
-                requestMap.put("HOST", line);
-                continue;
+            int indexOfColon = line.indexOf(":");
+            if (-1 < indexOfColon) {
+                String value = line.substring(1 + indexOfColon);
+                String key = line.substring(0, indexOfColon);
+                requestMap.put(key.trim(), value.trim());
             }
-            String[] kv = line.split(":");
-            String key = kv[0];
-            String value = kv[1];
-            requestMap.put(key, value);
         }
         return requestMap;
     }
+
+
 }

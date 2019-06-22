@@ -47,13 +47,13 @@ public class IotServer extends Thread {
             }
             socketHandler.handle(socket);
         }
-//        Io.closeableClose(this.serverSocket);
+        Io.serverSocketClose(this.serverSocket);
     }
 
     @Override
     public void interrupt() {
         this.running = false;
-        Io.closeableClose(this.serverSocket);
+        Io.serverSocketClose(this.serverSocket);
         T.interrupt(this);
         T.shutdown();
     }

@@ -112,10 +112,8 @@ public class X {
      * @return array
      */
     public static String[] splitNrOrRn(String string) {
-        if (string.contains(NR)) {
-            return string.split(NR);
-        }
-        return string.split(RN);
+        String newString = string.replaceAll(NR, RN);
+        return newString.split(RN);
     }
 
 }

@@ -25,7 +25,7 @@ public class SocketHandler implements ISocketHandler {
             } catch (Throwable t) {
                 t.printStackTrace();
             } finally {
-                Io.closeableClose(socket);
+                Io.socketClose(socket);
             }
         });
     }
