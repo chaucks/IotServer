@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import com.xcoder.iotserver.server.IotServer;
 import com.xcoder.iotserver.switcher.ISwitcher;
 import com.xcoder.iotserver.switcher.Switcher;
+import com.xcoder.iotserver.utensil.Ctx;
 
 /**
  * Iot Service
@@ -29,6 +30,7 @@ public class IotService extends Service {
         this.iotServer = new IotServer();
         this.iSwitcher = new Switcher();
         this.iotServer.start();
+        Ctx.CONTEXT.put("iSwitcher", this.iSwitcher);
     }
 
     @Nullable
@@ -42,5 +44,6 @@ public class IotService extends Service {
         super.onDestroy();
         this.iSwitcher.release();
         this.iotServer.interrupt();
+        Ctx.CONTEXT.clear();
     }
 }

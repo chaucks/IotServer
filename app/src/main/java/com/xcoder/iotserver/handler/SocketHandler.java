@@ -17,7 +17,7 @@ public class SocketHandler implements ISocketHandler {
 
     @Override
     public void handle(Socket socket) {
-        T.THREAD_POOL.execute(() -> {
+//        T.THREAD_POOL.execute(() -> {
             try {
                 InputStream is = socket.getInputStream();
                 OutputStream os = socket.getOutputStream();
@@ -27,7 +27,7 @@ public class SocketHandler implements ISocketHandler {
             } finally {
                 Io.socketClose(socket);
             }
-        });
+//        });
     }
 
 }

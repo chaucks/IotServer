@@ -2,6 +2,7 @@ package com.xcoder.iotserver.handler;
 
 import android.util.Log;
 
+import com.xcoder.iotserver.controller.Rf433Controller;
 import com.xcoder.iotserver.utensil.Io;
 import com.xcoder.iotserver.utensil.X;
 
@@ -37,6 +38,8 @@ public class IoHandler implements IIoHandler<InputStream, OutputStream> {
             Log.d("Request", request);
 
             Map<String, String> requestMap = getRequestMap(request);
+
+            new Rf433Controller().control(requestMap);
 
             os.write(OK_200_HTML.getBytes(CHARSET_OUT));
         } catch (Throwable t) {
