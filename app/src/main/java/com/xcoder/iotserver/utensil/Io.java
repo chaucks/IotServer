@@ -17,7 +17,7 @@ import java.net.Socket;
  */
 public class Io {
 
-    private static final long DEFAULT_EXPIRE = 20000L;
+    private static final long DEFAULT_EXPIRE = Long.MAX_VALUE;
 
     private static final long DEFAULT_TIMEOUT = 150L;
 

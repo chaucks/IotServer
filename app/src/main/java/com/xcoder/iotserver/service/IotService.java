@@ -5,10 +5,15 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
+
+import com.xcoder.iotserver.mqtt.AliMQTTClient;
 import com.xcoder.iotserver.server.IotServer;
 import com.xcoder.iotserver.switcher.ISwitcher;
 import com.xcoder.iotserver.switcher.Switcher;
 import com.xcoder.iotserver.utensil.Ctx;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Iot Service
@@ -24,13 +29,18 @@ public class IotService extends Service {
 
     private IBinder iBinder = new Binder();
 
+    private AliMQTTClient aliMQTTClient;
+
     @Override
     public void onCreate() {
         super.onCreate();
         this.iotServer = new IotServer();
         this.iSwitcher = new Switcher();
-        this.iotServer.start();
+//        this.iotServer.start();
         Ctx.CONTEXT.put("iSwitcher", this.iSwitcher);
+
+        this.aliMQTTClient = new AliMQTTClient();
+        this.aliMQTTClient.start();
     }
 
     @Nullable
@@ -45,5 +55,8 @@ public class IotService extends Service {
         this.iSwitcher.release();
         this.iotServer.interrupt();
         Ctx.CONTEXT.clear();
+        this.aliMQTTClient.release();
+
+        Log.v(TAG, "Destroy......");
     }
 }
