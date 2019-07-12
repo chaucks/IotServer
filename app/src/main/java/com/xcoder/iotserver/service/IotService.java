@@ -1,14 +1,14 @@
 package com.xcoder.iotserver.service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.xcoder.iotserver.mqtt.AliMQTTClient;
-import com.xcoder.iotserver.server.IotServer;
+import com.xcoder.iotserver.mqtt.MQTTHolder;
 import com.xcoder.iotserver.switcher.ISwitcher;
 import com.xcoder.iotserver.switcher.Switcher;
 import com.xcoder.iotserver.utensil.Ctx;
@@ -23,24 +23,27 @@ import static android.content.ContentValues.TAG;
  */
 public class IotService extends Service {
 
-    private ISwitcher iSwitcher;
-
-    private IotServer iotServer;
-
     private IBinder iBinder = new Binder();
 
-    private AliMQTTClient aliMQTTClient;
+    private ISwitcher iSwitcher;
+
+    private MQTTHolder mqttHolder;
+
+//    private IotServer iotServer;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        this.iotServer = new IotServer();
+        Context context = super.getApplicationContext();
+
         this.iSwitcher = new Switcher();
-//        this.iotServer.start();
         Ctx.CONTEXT.put("iSwitcher", this.iSwitcher);
 
-        this.aliMQTTClient = new AliMQTTClient();
-        this.aliMQTTClient.start();
+        this.mqttHolder = new MQTTHolder(context);
+        this.mqttHolder.start();
+
+//        this.iotServer = new IotServer();
+//        this.iotServer.start();
     }
 
     @Nullable
@@ -53,10 +56,9 @@ public class IotService extends Service {
     public void onDestroy() {
         super.onDestroy();
         this.iSwitcher.release();
-        this.iotServer.interrupt();
+        this.mqttHolder.interrupt();
+//        this.iotServer.interrupt();
         Ctx.CONTEXT.clear();
-        this.aliMQTTClient.release();
-
         Log.v(TAG, "Destroy......");
     }
 }

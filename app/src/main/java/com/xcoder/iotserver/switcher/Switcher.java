@@ -25,7 +25,7 @@ public class Switcher implements ISwitcher {
         X.objectsNotNull(this.mediaPlayer, path);
         synchronized (this.mediaPlayer) {
             String filePath = X.appendExternalStorageDirectory(File.separator, path, ".wav");
-            Log.v("File path:", filePath);
+            Log.v("File path", filePath);
             this.mediaPlayer.reset();
             this.mediaPlayer.setDataSource(filePath);
             this.mediaPlayer.prepare();
